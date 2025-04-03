@@ -1,0 +1,43 @@
+# Load required library for data manipulation
+library(dplyr)
+
+# Function to merge three tables with different join types
+merge_three_tables <- function(x, y, z, by_x_y, by_xy_z, join_type = "inner") {
+  
+  # Validate the join type to ensure it's one of the allowed values
+  if (!join_type %in% c("inner", "left", "right", "full")) {
+    stop("Invalid join type.")
+  }
+  
+  # Merge table x and table y based on the selected join type
+  xy_merged <- switch(join_type,
+                      "inner" = inner_join(x, y, by = by_x_y),
+                      "left"  = left_join(x, y, by = by_x_y),
+                      "right" = right_join(x, y, by = by_x_y),
+                      "full"  = full_join(x, y, by = by_x_y)
+  )
+  
+  # Merge the resulting xy_merged table with table z using the selected join type
+  final_merged <- switch(join_type,
+                         "inner" = inner_join(xy_merged, z, by = by_xy_z),
+                         "left"  = left_join(xy_merged, z, by = by_xy_z),
+                         "right" = right_join(xy_merged, z, by = by_xy_z),
+                         "full"  = full_join(xy_merged, z, by = by_xy_z)
+  )
+  
+  # Return the final merged table
+  return(final_merged)
+}
+
+# Example usage:
+# Sample data frames
+x <- data.frame(ID = c(1, 2, 3), Value_X = c("A", "B", "C"))
+y <- data.frame(ID = c(2, 3, 4), Value_Y = c("D", "E", "F"))
+z <- data.frame(ID = c(1, 3, 4), Value_Z = c("G", "H", "I"))
+
+# Merge with an inner join
+result <- merge_three_tables(x, y, z, by_x_y = "ID", by_xy_z = "ID", join_type = "inner")
+
+# Print the final merged table
+print(result)
+

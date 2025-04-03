@@ -1,0 +1,86 @@
+---
+title: "Jaya Optimization Test"
+author: "Moses Kamau Chege"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+### Introduction
+
+This research demonstrates how to optimize a simple mathematical function using the `Jaya` package in R.
+
+### Objective in this test.
+
+We aim to minimize the function:
+
+$$ f(x) = (x_1 - 3)^2 + (x_2 + 2)^2 $$
+
+where:
+- \( x_1 \) ranges from -10 to 10
+- \( x_2 \) ranges from -10 to 10
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Install and Load the Jaya Package
+
+```{r warning=FALSE, message=FALSE}
+# Set CRAN mirror
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+# Install Jaya package
+install.packages("Jaya")
+
+```
+```{r warning=FALSE, message=FALSE}
+ # Load the Jaya package
+library(Jaya) 
+```
+
+
+### Define the Objective Function
+
+```{r}
+objective_function <- function(x) {
+  return((x[1] - 3)^2 + (x[2] + 2)^2)
+}
+```
+
+### Define the limit values
+
+```{r}
+ # Lower limits for x1 and x2
+lower_bounds <- c(-10, -10) 
+
+# Upper limits for x1 and x2
+upper_bounds <- c(10, 10)   
+
+# Set population size and maximum iterations
+pop_size <- 20
+max_iter <- 100
+```
+
+### Run the Jaya Optimization Algorithm
+
+```{r}
+result <- jaya(
+  fun = objective_function,
+  lower = lower_bounds,
+  upper = upper_bounds,
+  popSize = pop_size,
+  maxiter = max_iter,
+  n_var = 2,  # Number of decision variables (x1, x2)
+  opt = "minimize"
+)
+
+# Print results
+print(result$Best)
+```
+
+### Plot optimization progress so as to visualize the process
+
+```{r}
+plot(result)
+```
+
