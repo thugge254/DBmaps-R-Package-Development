@@ -1,54 +1,77 @@
-## Jaya Optimization in R
+## 📊 R Merge Test with `data.table`
 
-This project demonstrates the usage of the Jaya optimization algorithm in R.
+This project demonstrates how to perform **four types of table joins** (`inner`, `left`, `right`, and `full`) using the `merge()` function in R with the `data.table` package.
 
-## Installation of the jaya package
+## 🧪 Data Used
 
-To install the Jaya package in R:
-install.packages("Jaya", repos = "https://cloud.r-project.org")
+library(data.table)
 
-## Usage
-
-The jaya package optimizes a give function, in this function, x1 and x2 variables have a limit of -10 to 10.
-
-## Implementation
-
-The optimization process is implemented in an R Markdown file.  Below is an overview of the main function:
-objective_function <- function(x) {
-  (x[1] - 3)^2 + (x[2] + 2)^2
-}
-
-## Run the Jaya algorithm
-library(Jaya)
-result <- jaya(
-  fun = objective_function,
-  lower = lower_bounds,
-  upper = upper_bounds,
-  popSize = 20,
-  maxiter = 100,
-  n_var = 2,
-  opt = "minimize"
+students <- data.table(
+  id = c("A", "B", "C", "D"),
+  Birthdate = c("2001-08-04", "2002-04-28", "2002-06-13", "2002-02-09")
 )
 
-## Print and visualize results
-print(summary(result))
-plot(result)
+scores <- data.table(
+  id = c("B", "C", "E"),
+  homework = c(87, 94, 92),
+  quiz = c(91, 90, 87)
+)
 
-## Results
+## Join Operations
 
-The Jaya optimizatin function finds the optimal values that minimize the given function. The output includes:
-The best solution found (optimal variable values and objective function value).
-A plot showing the convergence of the optimization process.
+### 1. Inner Join
+merge(students, scores, by = "id")
 
-## Repository Structure
+#### Output
 
-📂 GSoC  
-│── 📂 Jaya-Optimization-Test-in-R  
-│   ├── Jaya-Optimization-Test-in-R.Rmd  # R Markdown file for the test  
-│   ├── Jaya-Optimization-Test-in-R.R
-│   ├── Jaya-Optimization-Test-in-R.html
-│  
-│── README.md
+   id   Birthdate homework quiz
+1:  B 2002-04-28       87    91
+2:  C 2002-06-13       94    90
+
+### 2. Left Join
+
+merge(students, scores, by = "id", all.x = TRUE)
+
+#### Output
+
+   id   Birthdate homework quiz
+1:  A 2001-08-04       NA    NA
+2:  B 2002-04-28       87    91
+3:  C 2002-06-13       94    90
+4:  D 2002-02-09       NA    NA
+
+### 3. Right Join
+
+merge(students, scores, by = "id", all.y = TRUE)
+
+#### Output 
+
+   id   Birthdate homework quiz
+1:  B 2002-04-28       87    91
+2:  C 2002-06-13       94    90
+3:  E        <NA>       92    87
+
+### 4. Full Outer Join
+
+merge(students, scores, by = "id", all = TRUE)
+
+#### Output 
+
+   id   Birthdate homework quiz
+1:  A 2001-08-04       NA    NA
+2:  B 2002-04-28       87    91
+3:  C 2002-06-13       94    90
+4:  D 2002-02-09       NA    NA
+5:  E        <NA>       92    87
+
+## Requirements
+
+- R
+
+- data.table package
+
+Install if needed:
+install.packages("data.table")
 
 ## License
 
